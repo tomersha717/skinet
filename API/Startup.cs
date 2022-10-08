@@ -30,6 +30,11 @@ namespace API
 
             services.AddApplicationServices(); //our custom extension
             services.AddSwaggerDocumentation(); //our custom extension
+            services.AddCors(options => {
+                options.AddPolicy("CorePolicy", policy => {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
 
         }
 
@@ -47,6 +52,7 @@ namespace API
             app.UseRouting();
             app.UseStaticFiles();
 
+            app.UseCors("CorePolicy");
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation(); //our custom extension

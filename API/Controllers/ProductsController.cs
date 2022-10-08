@@ -12,6 +12,7 @@ using API.DTOs;
 using AutoMapper;
 using API.Errors;
 using Microsoft.AspNetCore.Http;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -34,23 +35,21 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
+
+            var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
+
+            var countSpec = new ProductWithFiltersForCountSpesifications(productParams);
+
+            var totalItems = await _productRepo.CountAsync(countSpec);
             var products = await _productRepo.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products);
+            
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize, totalItems, data));
 
-            // return products.Select(x => new ProductToReturnDto
-            // {
-            //     Id = x.Id,
-            //     Name = x.Name,
-            //     Description = x.Description,
-            //     PictureUrl = x.PictureUrl,
-            //     Price = x.Price,
-            //     ProductBrand = x.ProductBrand.Name,
-            //     ProductType = x.ProductType.Name
-            // }).ToList();
+
 
         }
 
@@ -67,16 +66,7 @@ namespace API.Controllers
 
             return _mapper.Map<Product,ProductToReturnDto>(product);
 
-            // return new ProductToReturnDto
-            // {
-            //     Id = product.Id,
-            //     Name = product.Name,
-            //     Description = product.Description,
-            //     PictureUrl = product.PictureUrl,
-            //     Price = product.Price,
-            //     ProductBrand = product.ProductBrand.Name,
-            //     ProductType = product.ProductType.Name
-            // };
+
         }
 
         [HttpGet("brands")]
