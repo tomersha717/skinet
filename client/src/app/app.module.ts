@@ -8,6 +8,7 @@ import { ShopModule } from './shop/shop.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomeModule } from './home/home.module';
 
 
 
@@ -21,7 +22,7 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule,
-    ShopModule
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
