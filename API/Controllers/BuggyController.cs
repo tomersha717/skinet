@@ -17,6 +17,7 @@ namespace API.Controllers
             _context = context;
         }
 
+        //404
         [HttpGet("notfound")]
         public ActionResult GetNotFoundRequest()
         {
@@ -30,6 +31,7 @@ namespace API.Controllers
             return Ok();
         }
 
+        //500
         [HttpGet("servererror")]
         public ActionResult GetServerError()
         {
@@ -41,6 +43,7 @@ namespace API.Controllers
         }
 
 
+        //400
         [HttpGet("badrequest")]
         public ActionResult GetBadRequest()
         {
@@ -49,6 +52,7 @@ namespace API.Controllers
         }
 
 
+        //400 validation error
         [HttpGet("badrequest/{id}")]
         public ActionResult GetNotFoundRequest(int id)
         {
