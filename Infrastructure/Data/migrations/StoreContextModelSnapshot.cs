@@ -31,8 +31,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("CustomerBasketId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PictureUrl")
                         .HasColumnType("nvarchar(max)");

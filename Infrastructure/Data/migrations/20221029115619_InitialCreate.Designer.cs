@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20221028211006_AddBasket")]
-    partial class AddBasket
+    [Migration("20221029115619_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,8 +33,8 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("CustomerBasketId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PictureUrl")
                         .HasColumnType("nvarchar(max)");

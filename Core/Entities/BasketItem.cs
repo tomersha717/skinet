@@ -8,7 +8,7 @@ namespace Core.Entities
         //[Key]      
         // [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
-        public string ItemId { get; set; }
+        public int ItemId { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
