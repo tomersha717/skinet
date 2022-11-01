@@ -33,7 +33,7 @@ namespace API.Extensions
                     
                     var errorResponse = new ApiValidationErrorResponse
                     {
-                        errors = errors
+                        Errors = errors
                     };
 
                     return new BadRequestObjectResult(errorResponse);

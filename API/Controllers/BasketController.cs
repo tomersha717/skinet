@@ -27,17 +27,19 @@ namespace API.Controllers
         {
             var basket = await _basketRepository.GetBusketAsync(id);
 
-            var basketDto = _mapper.Map<CustomerBasketDto>(basket);
+            var basketDto = _mapper.Map<CustomerBasket,CustomerBasketDto>(basket);
 
             return Ok( basketDto ?? new CustomerBasketDto(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerBasketDto>> UpdateBasket(CustomerBasket basket)
+        public async Task<ActionResult<CustomerBasketDto>> UpdateBasket(CustomerBasketDto basket)
         {
-            var updatedBasket = await _basketRepository.UpdateBusketAsync(basket);
+            var customerBasket = _mapper.Map<CustomerBasketDto, CustomerBasket>(basket);
+            
+            var updatedBasket = await _basketRepository.UpdateBusketAsync(customerBasket);
 
-            return Ok(_mapper.Map<CustomerBasketDto>(updatedBasket));
+            return Ok(updatedBasket);
         }
 
         
