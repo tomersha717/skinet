@@ -2,12 +2,13 @@ using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
+
 
 namespace API
 {
@@ -28,6 +29,7 @@ namespace API
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppIdentityDbContext>(x => x.UseSqlServer(_config.GetConnectionString("IdentityConnection")));
 
             // services.AddSingleton<ConnectionMultiplexer>(c => {
             //     var configuration = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"), true);
@@ -35,6 +37,7 @@ namespace API
             // });
 
             services.AddApplicationServices(); //our custom extension
+            services.AddIdentityServices(_config); //our custom extension
             services.AddSwaggerDocumentation(); //our custom extension
             services.AddCors(options => {
                 options.AddPolicy("CorePolicy", policy => {
@@ -59,6 +62,8 @@ namespace API
             app.UseStaticFiles();
 
             app.UseCors("CorePolicy");
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation(); //our custom extension

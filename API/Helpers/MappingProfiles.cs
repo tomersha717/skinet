@@ -1,6 +1,7 @@
 using API.DTOs;
 using AutoMapper;
 using Core.Entities;
+using Core.Entities.Identity;
 
 namespace API.Helpers
 {
@@ -15,6 +16,9 @@ namespace API.Helpers
 
             CreateMap<CustomerBasket, CustomerBasketDto>();
             CreateMap<BasketItem, BasketItemDto>();
+
+            CreateMap<Address, AddressDto>().ReverseMap();
+            
         }
     }
 }
