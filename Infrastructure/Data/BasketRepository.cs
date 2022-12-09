@@ -36,9 +36,9 @@ namespace Infrastructure.Data
         public async Task<CustomerBasket> GetBusketAsync(string basketId)
         {
 
+            var data = new CustomerBasket();
 
-
-            var data = await _context.CustomerBaskets.Include(bi => bi.Items).FirstOrDefaultAsync(b => b.Id == basketId);
+            data = await _context.CustomerBaskets.Include(bi => bi.Items).FirstOrDefaultAsync(b => b.Id == basketId);
 
 
             if(data == null)
