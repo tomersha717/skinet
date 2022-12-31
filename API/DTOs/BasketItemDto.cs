@@ -8,6 +8,7 @@ namespace API.DTOs
 {
     public class BasketItemDto
     {
+        public int? Id { get; set; }
         [Required]
         public int ItemId { get; set; }
         [Required]

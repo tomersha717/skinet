@@ -55,40 +55,107 @@ namespace Infrastructure.Data
         public async Task<CustomerBasket> UpdateBusketAsync(CustomerBasket basket)
         {
 
+            var existsBasket = new CustomerBasket();
+            existsBasket  = await _context.CustomerBaskets.Include(bi => bi.Items).FirstOrDefaultAsync(b => b.Id == basket.Id);
+            
+            var existsBasketItem = new BasketItem();
+            
+            
 
-            var existsBasket  = await _context.CustomerBaskets.Include(bi => bi.Items).FirstOrDefaultAsync(b => b.Id == basket.Id);
+
 
             if(existsBasket != null) 
             {
-                // for (int i = 0; i < existsBasket.Items.Count; i++)
-                // {
+                
                     
-                //         existsBasket.Items[i].ItemId = basket.Items[i].ItemId;
-                //         existsBasket.Items[i].ProductName = basket.Items[i].ProductName;
-                //         existsBasket.Items[i].Price = basket.Items[i].Price;
-                //         existsBasket.Items[i].Quantity = basket.Items[i].Quantity;
-                //         existsBasket.Items[i].PictureUrl = basket.Items[i].PictureUrl;
-                //         existsBasket.Items[i].Brand = basket.Items[i].Brand;
-                //         existsBasket.Items[i].Type = basket.Items[i].Type;
-                    
+                existsBasket.ClientSecret = basket.ClientSecret;
+                existsBasket.PaymentIntentId = basket.PaymentIntentId;
+                existsBasket.DeliveryMethodId = basket.DeliveryMethodId;
+                existsBasket.ShippingPrice = basket.ShippingPrice;
 
-                // }
+                // Update or remove items from Basket
+                for (int i = 0; i < existsBasket.Items.Count; i++)
+                {
+                    BasketItem clientItemBasket = basket.Items.Find(item => item.Id == existsBasket.Items[i].Id);
+                    
+                    if (clientItemBasket != null)
+                    {
+                        existsBasket.Items[i].Quantity = clientItemBasket.Quantity;
+                    }
+                    else
+                    {
+                        existsBasket.Items.Remove(existsBasket.Items[i]);
+                    }
+                }
+
+                // Add items to Basket
+                for (int i = 0; i < basket.Items.Count; i++)
+                {
+                    existsBasketItem = await _context.BasketItems.FirstOrDefaultAsync(item => item.Id == basket.Items[i].Id);
+                    if (existsBasketItem == null)
+                    {
+                        existsBasket.Items.Add(basket.Items[i]);
+                    }
+
+                }
+
+
+
+
+                /*
+                foreach (var item in basket.Items)
+                {
+                    existsBasketItem = await _context.BasketItems.FirstOrDefaultAsync(i => i.Id == );
+                    if (existsBasketItem != null)
+                    {
+
+                        existsBasketItem.Quantity = item.Quantity;
+                    }
+                    else
+                    {
+                        existsBasket.Items.Add(item);
+                    }
+                }
+                
+                var result = await _context.SaveChangesAsync();
+
+                // CustomerBasket existsBasketCheckToRemove = new CustomerBasket();
+                // existsBasketCheckToRemove = existsBasket;
+
+                existsBasket  = await _context.CustomerBaskets.Include(bi => bi.Items).FirstOrDefaultAsync(b => b.Id == basket.Id);
+                foreach (var item in existsBasket.Items)
+                {
+
+                    //existsBasketItem = await _context.BasketItems.FirstOrDefaultAsync(i => i.Id == item.Id);
+                    BasketItem clientItemBasket = basket.Items.Find(i => i.Id == item.Id);
+
+                    if (clientItemBasket == null)
+                    {                        
+                        existsBasket.Items.Remove(item);
+                    }
+                    
+                }
+
+                /*
                 for (int i = 0; i < existsBasket.Items.Count; i++)
                 {
                     _context.BasketItems.Remove(existsBasket.Items[i]);
                 }
 
-                for (int i = 0; i < basket.Items.Count; i++)
+                int totalItems = basket.Items.Count;
+                for (int i = 0; i < totalItems; i++)
                 {
-                    existsBasket.Items.Add(basket.Items[i]);                    
+                    existsBasket.Items.Add(basket.Items[i]);
                 }
-
+                */
                 var result = await _context.SaveChangesAsync();
-                if(result > 0) return basket;
+                
+                if(result > 0) return existsBasket;
 
                 return null;
             }
-            else{
+            else
+            {
                 await _context.CustomerBaskets.AddAsync(basket);
 
                 var result = await _context.SaveChangesAsync();
